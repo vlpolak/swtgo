@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"golang.org/x/tour/pic"
 )
 
@@ -13,7 +12,6 @@ func Pic(dx, dy int) [][]uint8 {
 			pc[i][j] = uint8((j + i) / 2)
 		}
 	}
-	fmt.Println("Slice of slices: ", pc)
 	return pc
 }
 

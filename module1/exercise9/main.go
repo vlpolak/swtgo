@@ -14,8 +14,13 @@ type Image struct {
 func (i Image) Bounds() image.Rectangle {
 	return image.Rect(0, 0, i.w, i.h)
 }
-func (i Image) At(w, h int) color.Color {
-	return color.RGBA{55, 44, 245, 65}
+
+func (i Image) At(x, y int) color.Color {
+	var r, g, b, a uint8 = 0, 0, 0, 0
+	b = uint8(x / 2)
+	r = uint8(y / 2)
+	a = b
+	return color.RGBA{r, g, b, a}
 }
 func (i Image) ColorModel() color.Model {
 	return color.RGBAModel

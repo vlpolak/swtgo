@@ -7,14 +7,19 @@ import (
 
 var wg sync.WaitGroup
 var cache = make(Cache)
+var mux sync.Mutex
 
 type Cache map[string]bool
 
 func (ch Cache) get(key string) bool {
+	mux.Lock()
+	defer mux.Unlock()
 	return cache[key]
 }
 
 func (ch Cache) set(key string, value bool) {
+	mux.Lock()
+	defer mux.Unlock()
 	cache[key] = value
 }
 
@@ -27,6 +32,7 @@ type Fetcher interface {
 // Crawl uses fetcher to recursively crawl
 // pages starting with url, to a maximum of depth.
 func Crawl(url string, depth int, fetcher Fetcher) {
+	defer wg.Done()
 
 	if cache.get(url) {
 		return
@@ -50,7 +56,9 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 }
 
 func main() {
+	wg.Add(1)
 	Crawl("https://golang.org/", 4, fetcher)
+	wg.Wait()
 }
 
 // fakeFetcher is Fetcher that returns canned results.

@@ -2,16 +2,12 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type IPAddr [4]byte
 
 func (a IPAddr) String() string {
-	return strconv.Itoa(int(a[0])) + "." +
-		strconv.Itoa(int(a[1])) + "." +
-		strconv.Itoa(int(a[2])) + "." +
-		strconv.Itoa(int(a[3]))
+	return fmt.Sprintf("%v.%v.%v.%v", a[0], a[1], a[2], a[3])
 }
 
 func main() {

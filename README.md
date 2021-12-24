@@ -2,6 +2,8 @@
 
 #Package hasher contains functions for creating password hash codes and testing them
 
+godoc -http=:6060
+
 The example of using
 
 package main

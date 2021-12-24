@@ -22,4 +22,11 @@ hash, _ := hasher.HashPassword(password)
 	fmt.Println("Match:   ", match)
 }
 
+## Password hasher
+Generation and validation of passwords using bcrypt hashes
 
+## Installation
+
+~~~sh
+go get -u github.com/vlpolak/swtgo/module2
+~~~

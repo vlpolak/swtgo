@@ -1,8 +1,6 @@
 # This project is created for Switch to Go program
 
-#Package hasher contains functions for creating password hash codes and testing them
-
-godoc -http=:6060
+##Package hasher contains functions for creating password hash codes and testing them
 
 The example of using
 

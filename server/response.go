@@ -1,4 +1,4 @@
-package server
+package main
 
 type CreateUserResponse struct {
 	Id       string `json:"id,omitempty"`

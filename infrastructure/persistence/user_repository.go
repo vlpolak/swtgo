@@ -10,15 +10,6 @@ type UserRepo struct {
 	db *gorm.DB
 }
 
-func (r *UserRepo) FindUser(name string) (*entity.User, map[string]string) {
-	var user entity.User
-	err := r.db.Where("name = ?", name).Take(&user).Error
-	if err != nil {
-		return nil, nil
-	}
-	return &user, nil
-}
-
 func NewUserRepository(db *gorm.DB) *UserRepo {
 	return &UserRepo{db}
 }
@@ -31,4 +22,13 @@ func (r *UserRepo) SaveUser(user *entity.User) (*entity.User, map[string]string)
 		return nil, nil
 	}
 	return user, nil
+}
+
+func (r *UserRepo) FindUser(name string) (*entity.User, map[string]string) {
+	var user entity.User
+	err := r.db.Where("user_name = ?", name).Take(&user).Error
+	if err != nil {
+		return nil, nil
+	}
+	return &user, nil
 }

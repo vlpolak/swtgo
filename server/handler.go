@@ -73,6 +73,9 @@ func (s *Server) HandleLogin() func(writer http.ResponseWriter, request *http.Re
 
 		log.Printf("User was found", foundUser)
 
+		er := hasher.CheckPasswordHash(r.Password, foundUser.HashedPassword)
+		log.Printf("User was found password", er)
+
 		response := &LoginUserResponse{"https://www.google.com/"}
 		err = json.NewEncoder(writer).Encode(response)
 

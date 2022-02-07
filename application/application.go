@@ -12,14 +12,14 @@ type userApp struct {
 var _ UserAppInterface = &userApp{}
 
 type UserAppInterface interface {
-	SaveUser(*entity.User) (*entity.User, map[string]string)
-	FindUser(string) (*entity.User, map[string]string)
+	SaveUser(*entity.User) (*entity.User, error)
+	FindUser(string) (*entity.User, error)
 }
 
-func (u *userApp) SaveUser(user *entity.User) (*entity.User, map[string]string) {
-	return u.us.SaveUser(user)
+func (u *userApp) SaveUser(user *entity.User) (*entity.User, error) {
+	return u.SaveUser(user)
 }
 
-func (u *userApp) FindUser(name string) (*entity.User, map[string]string) {
-	return u.us.FindUser(name)
+func (u *userApp) FindUser(name string) (*entity.User, error) {
+	return u.FindUser(name)
 }

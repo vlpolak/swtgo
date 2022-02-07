@@ -1,0 +1,10 @@
+2022/02/07 20:58:01 Logging to a file in Go!
+2022/02/07 21:01:57 User was found
+2022/02/07 21:18:20 User was found
+2022/02/07 21:23:21 User was created
+2022/02/07 21:25:07 User was found
+2022/02/07 21:37:16 User was found%!(EXTRA *entity.User=&{2750f662-66f7-4c75-a289-c38584587952 rrrrrrrrrrr $2a$14$NWZDEvFql0PuT9rhBnoOUuc8AIrUv7opQ5e5QhavEIZA.UZmJ1gHK})
+2022/02/07 21:37:49 User &{f0a38690-3e75-4057-8851-cd6f637aaecc gggggggggggggggggggggg $2a$14$9eQ8NxTeMuK3Y6g7TnRV6OlEFPktirWqppCPEJgx0/O62L5T40Gcm} was created
+2022/02/07 21:45:38 User was found%!(EXTRA *entity.User=&{2750f662-66f7-4c75-a289-c38584587952 rrrrrrrrrrr $2a$14$NWZDEvFql0PuT9rhBnoOUuc8AIrUv7opQ5e5QhavEIZA.UZmJ1gHK})
+2022/02/07 21:46:48 User was found%!(EXTRA *entity.User=&{2750f662-66f7-4c75-a289-c38584587952 rrrrrrrrrrr $2a$14$NWZDEvFql0PuT9rhBnoOUuc8AIrUv7opQ5e5QhavEIZA.UZmJ1gHK})
+2022/02/07 21:51:56 User was found%!(EXTRA *entity.User=&{2750f662-66f7-4c75-a289-c38584587952 rrrrrrrrrrr $2a$14$NWZDEvFql0PuT9rhBnoOUuc8AIrUv7opQ5e5QhavEIZA.UZmJ1gHK})

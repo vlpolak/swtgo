@@ -5,6 +5,6 @@ import (
 )
 
 type UserRepository interface {
-	SaveUser(*entity.User) (*entity.User, map[string]string)
-	FindUser(string) (*entity.User, map[string]string)
+	SaveUser(*entity.User) (*entity.User, error)
+	FindUser(string) (*entity.User, error)
 }

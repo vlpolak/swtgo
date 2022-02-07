@@ -4,6 +4,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/vlpolak/swtgo/application"
 	"github.com/vlpolak/swtgo/infrastructure/persistence"
+	"github.com/vlpolak/swtgo/logger"
+	"log"
 	"net/http"
 )
 
@@ -48,4 +50,6 @@ func (s *Server) Serve() error {
 func (s *Server) Routes() {
 	s.Router.HandleFunc("/user", s.HandleRegisterUser()).Methods("POST")
 	s.Router.HandleFunc("/user/login", s.HandleLogin()).Methods("POST")
+	wrappedMux := logger.HttpLogger(s.Router)
+	log.Fatal(http.ListenAndServe("localhost:18080", wrappedMux))
 }

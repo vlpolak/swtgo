@@ -4,14 +4,19 @@ go 1.17
 
 require (
 	github.com/google/uuid v1.3.0
+	github.com/googollee/go-socket.io v1.6.1
 	github.com/gorilla/mux v1.8.0
-	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
+	github.com/twharmon/goweb v0.13.3
+	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
 	golang.org/x/tour v0.1.0
 	gorm.io/driver/postgres v1.2.3
 	gorm.io/gorm v1.22.5
 )
 
 require (
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
+	github.com/gomodule/redigo v1.8.4 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

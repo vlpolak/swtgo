@@ -1,12 +1,14 @@
 package application
 
 import (
+	"github.com/vlpolak/swtgo/cache"
 	"github.com/vlpolak/swtgo/domain/entity"
 	"github.com/vlpolak/swtgo/domain/repository"
 )
 
 type userApp struct {
 	us repository.UserRepository
+	lc cache.LocalCache
 }
 
 var _ UserAppInterface = &userApp{}

@@ -76,6 +76,7 @@ func (s *Server) HandleLogin() func(writer http.ResponseWriter, request *http.Re
 		}
 
 		foundUser, _ := (*s.Users).us.FindUser(r.UserName)
+		(*s.Users).lc.SaveActiveUser(foundUser)
 		logger.CommonLogger("User was found", foundUser).Log()
 
 		hasher.CheckPasswordHash(r.Password, foundUser.HashedPassword)
@@ -86,6 +87,41 @@ func (s *Server) HandleLogin() func(writer http.ResponseWriter, request *http.Re
 		if err != nil {
 			logger.ErrorLogger("Couldn't convert user to json", err).Log()
 			http.Error(writer, "Registration failed", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) HandleGetAvtiveUsers() func(writer http.ResponseWriter, request *http.Request) {
+
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		r, err := createLoginUserRequest(*request)
+		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = validateLoginUserRequest(r)
+		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		foundUsers := (*s.Users).lc.FindActiveUser()
+
+		logger.CommonLogger("User was found", foundUsers).Log()
+
+		response := &LoginUserResponse{"https://www.google.com/"}
+		err = json.NewEncoder(writer).Encode(response)
+
+		if err != nil {
+			logger.ErrorLogger("Couldn't convert user to json", err).Log()
+			http.Error(writer, "Active user search failed", http.StatusInternalServerError)
 			return
 		}
 	}

@@ -13,37 +13,33 @@ type cachedUser struct {
 
 type LocalCache struct {
 	mu             sync.RWMutex
-	users          map[string]cachedUser
+	user           map[string]cachedUser
 	userRepository repository.UserRepository
 }
 
 func NewLocalCache(ur repository.UserRepository) *LocalCache {
 	lc := &LocalCache{
-		users:          make(map[string]cachedUser),
+		user:           make(map[string]cachedUser),
 		userRepository: ur,
 	}
 	return lc
 }
 
-func (lc *LocalCache) SaveActiveUser(u *entity.User) (*entity.User, error) {
+func (lc *LocalCache) SaveActiveUser(u *entity.User) {
 	lc.mu.Lock()
 	defer lc.mu.Unlock()
-	lc.users[u.UserName] = cachedUser{
+	lc.user[u.UserName] = cachedUser{
 		User: u,
 	}
-	return lc.userRepository.SaveUser(u)
 }
 
 var (
 	errUserNotInCache = errors.New("the user isn't in cache")
 )
 
-func (lc *LocalCache) FindActiveUser(name string) (*entity.User, error) {
+func (lc *LocalCache) FindActiveUser() map[string]cachedUser {
 	lc.mu.RLock()
 	defer lc.mu.RUnlock()
-	cu, ok := lc.users[name]
-	if !ok {
-		return lc.userRepository.FindUser(name)
-	}
-	return cu.User, nil
+	user := lc.user
+	return user
 }

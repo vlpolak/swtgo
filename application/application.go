@@ -8,7 +8,7 @@ import (
 
 type userApp struct {
 	us repository.UserRepository
-	lc cache.ActiveUsersCache
+	lc cache.LocalCache
 }
 
 var _ UserAppInterface = &userApp{}

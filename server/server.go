@@ -1,15 +1,18 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/vlpolak/swtgo/application"
 	"github.com/vlpolak/swtgo/cache"
 	"github.com/vlpolak/swtgo/infrastructure/persistence"
+	"github.com/vlpolak/swtgo/logger"
+	"log"
 	"net/http"
 )
 
 type Users struct {
 	us application.UserAppInterface
-	lc cache.ActiveUsersCache
+	lc cache.LocalCache
 }
 
 func NewUsers(us application.UserAppInterface) *Users {
@@ -19,7 +22,8 @@ func NewUsers(us application.UserAppInterface) *Users {
 }
 
 type Server struct {
-	Users **Users
+	Router *mux.Router
+	Users  **Users
 }
 
 func CreateServer() *Server {
@@ -30,16 +34,21 @@ func CreateServer() *Server {
 	users := NewUsers(services.User)
 	services.Automigrate()
 	s := &Server{
-		Users: &users,
+		Router: &mux.Router{},
+		Users:  &users,
 	}
+	s.Routes()
 	return s
 }
 
-func (s *Server) Serve() error {
-	http.HandleFunc("/", s.HandleHome)
-	http.HandleFunc("/login/", s.LoginHandlerFunc)
-	http.HandleFunc("/2fa/", s.Setup2FAHandlerFunc)
-	http.HandleFunc("/qr.png", s.GenQRCodeHandlerFunc)
-	http.HandleFunc("/verify2fa/", s.Verifi2faHandlerFunc)
-	return http.ListenAndServe(":8080", nil)
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	logger.HttpLogger(s.Router).ServeHTTP(w, r)
+}
+
+func (s *Server) Routes() {
+	s.Router.HandleFunc("/user", s.HandleRegisterUser()).Methods("POST")
+	s.Router.HandleFunc("/user/login", s.HandleLogin()).Methods("POST")
+	s.Router.HandleFunc("/user/active", s.HandleGetAvtiveUsers()).Methods("GET")
+	wrappedMux := logger.HttpLogger(s.Router)
+	log.Fatal(http.ListenAndServe("localhost:18080", wrappedMux))
 }

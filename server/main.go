@@ -1,5 +1,7 @@
 package main
 
 func main() {
-	CreateServer()
+	//ws.StartServer()
+	s := CreateServer()
+	s.Serve()
 }

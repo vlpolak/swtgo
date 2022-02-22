@@ -21,15 +21,10 @@ func NewRepositories() (*Repositories, error) {
 	db, err = gorm.Open(postgres.New(postgres.Config{
 		DSN: "user=root password=secret dbname=postgres port=5432 sslmode=disable",
 	}), &gorm.Config{})
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &Repositories{
 		User: NewUserRepository(db),
 		db:   db,
-	}, nil
+	}, err
 }
 
 func (s *Repositories) Automigrate() error {

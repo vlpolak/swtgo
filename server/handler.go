@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/vlpolak/swtgo/domain/entity"
+	"github.com/vlpolak/swtgo/logger"
 	"github.com/vlpolak/swtgo/pkg/hasher"
 	"log"
 	"net/http"
@@ -20,31 +21,34 @@ func (s *Server) HandleRegisterUser() func(writer http.ResponseWriter, request *
 
 		r, err := createCreateUserRequest(*request)
 		if err != nil {
+			logger.ErrorLogger("Couldn't create user", err).Log()
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		err = validateCreateUserRequest(r)
 		if err != nil {
+			logger.ErrorLogger("Couldn't create user", err).Log()
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		userEntity, err := createUser(r.UserName, r.Password)
 		if err != nil {
+			logger.ErrorLogger("Couldn't create user", err).Log()
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		(*s.Users).us.SaveUser(&userEntity)
 
-		log.Printf("User was created", userEntity)
+		logger.CommonLogger("User %s was created", &userEntity).Log()
 
 		response := &CreateUserResponse{Id: entity.User{}.Uuid.String(), UserName: entity.User{}.UserName}
 		err = json.NewEncoder(writer).Encode(response)
 
 		if err != nil {
-			log.Printf("Couldn't convert user to json %v", r)
+			logger.ErrorLogger("Couldn't convert user to json", err).Log()
 			http.Error(writer, "Registration failed", http.StatusInternalServerError)
 			return
 		}
@@ -59,26 +63,65 @@ func (s *Server) HandleLogin() func(writer http.ResponseWriter, request *http.Re
 
 		r, err := createLoginUserRequest(*request)
 		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		err = validateLoginUserRequest(r)
 		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		foundUser, _ := (*s.Users).us.FindUser(r.UserName)
+		(*s.Users).lc.SaveActiveUser(foundUser)
+		logger.CommonLogger("User was found", foundUser).Log()
 
-		log.Printf("User was found", foundUser)
+		hasher.CheckPasswordHash(r.Password, foundUser.HashedPassword)
 
 		response := &LoginUserResponse{"https://www.google.com/"}
 		err = json.NewEncoder(writer).Encode(response)
 
 		if err != nil {
-			log.Printf("Couldn't convert user to json %v", r)
+			logger.ErrorLogger("Couldn't convert user to json", err).Log()
 			http.Error(writer, "Registration failed", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) HandleGetAvtiveUsers() func(writer http.ResponseWriter, request *http.Request) {
+
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		r, err := createLoginUserRequest(*request)
+		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = validateLoginUserRequest(r)
+		if err != nil {
+			logger.ErrorLogger("Couldn't login", err).Log()
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		foundUsers := (*s.Users).lc.FindActiveUser()
+
+		logger.CommonLogger("User was found", foundUsers).Log()
+
+		response := &LoginUserResponse{"https://www.google.com/"}
+		err = json.NewEncoder(writer).Encode(response)
+
+		if err != nil {
+			logger.ErrorLogger("Couldn't convert user to json", err).Log()
+			http.Error(writer, "Active user search failed", http.StatusInternalServerError)
 			return
 		}
 	}

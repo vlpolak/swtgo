@@ -8,6 +8,11 @@ import (
 
 var once sync.Once
 
+type Authorization interface {
+	Create(user *entity.User) (*entity.User, error)
+	Get(user *entity.User) (*entity.User, error)
+}
+
 type userService struct {
 	userRepository entity.UserRepository
 }

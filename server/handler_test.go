@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestCreateUserRequest(t *testing.T) {
+func TestLoginHandlerFunct(t *testing.T) {
 	defer gock.Off()
 	gock.New("localhost:8080").
 		Post("/login").
@@ -22,6 +22,6 @@ func TestCreateUserRequest(t *testing.T) {
 	st.Expect(t, res.StatusCode, 200)
 
 	res_body, _ := ioutil.ReadAll(res.Body)
-	st.Expect(t, string(res_body)[:13], `{"foo":"bar"}`)
+	st.Expect(t, string(res_body), "hello Jinzhu")
 	st.Expect(t, gock.IsDone(), true)
 }

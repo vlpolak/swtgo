@@ -11,6 +11,7 @@ var once sync.Once
 type Authorization interface {
 	Create(user *entity.User) (*entity.User, error)
 	Get(user *entity.User) (*entity.User, error)
+	Validate(user *entity.User) error
 }
 
 type UserService struct {
@@ -27,7 +28,7 @@ func NewUserService(r entity.UserRepository) entity.UserService {
 	})
 	return instance
 }
-func (*UserService) Validate(user *entity.User) error {
+func (u *UserService) Validate(user *entity.User) error {
 	if user == nil {
 		err := errors.New("The user is empty")
 		return err

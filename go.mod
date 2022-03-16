@@ -3,6 +3,7 @@ module github.com/vlpolak/swtgo
 go 1.17
 
 require (
+	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32

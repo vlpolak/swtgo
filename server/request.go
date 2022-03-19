@@ -1,4 +1,4 @@
-package main
+package server
 
 type CreateUserRequest struct {
 	UserName string `json:"name"`

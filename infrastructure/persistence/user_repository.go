@@ -5,6 +5,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserPersistence interface {
+	SaveUser(user *entity.User) (*entity.User, error)
+	FindUser(name string) (*entity.User, error)
+}
+
 type UserRepo struct {
 	db *gorm.DB
 }

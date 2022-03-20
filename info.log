@@ -65,3 +65,10 @@
 2022/03/09 15:56:26 User was found%!(EXTRA *entity.User=&{00000000-0000-0000-0000-000000000000 Jinzhu 122234234})
 2022/03/09 15:56:49 User was found%!(EXTRA *entity.User=&{00000000-0000-0000-0000-000000000000 Jinzhu 122234234})
 2022/03/09 16:01:10 User was found%!(EXTRA *entity.User=&{00000000-0000-0000-0000-000000000000 Jinzhu 122234234})
+2022/03/20 09:43:24 User was found%!(EXTRA *entity.User=&{00000000-0000-0000-0000-000000000000 Jinzhu 122234234})
+2022/03/20 09:56:47 Couldn't create user%!(EXTRA *errors.errorString=request was incorrect, user name should contain at least 4 characters)
+2022/03/20 09:58:02 Couldn't create user%!(EXTRA *errors.errorString=request was incorrect, user name should contain at least 4 characters)
+2022/03/20 09:59:31 Couldn't create user%!(EXTRA *errors.errorString=request was incorrect, user name should contain at least 4 characters)
+2022/03/20 10:01:04 User &{6dfae5e5-3fe7-485f-82f3-53240a7fb9eb Testweeterere $2a$14$GejRIFNU51E5wwhnDITXoOHtA9sYnfTBsMEv5FZJ23YhDYvQyiJAK} was created
+2022/03/20 10:37:29 User &{4c0625d1-14c0-4fdb-8cd8-b8872e3991c0 Testweeterere $2a$14$VYfdfDXYpK6pY4n6j79Wn.ZHHUu08WLzhX./sGjM62InECZRuBonu} was created
+2022/03/20 10:38:58 User &{541e7f67-1648-4975-901d-9be9a522447f Testweeterere $2a$14$z2aLUmWCnViTvzIqAXLsZuHDW7bqifqVfbqkSK04HlJGDh8FCie.G} was created

@@ -27,7 +27,7 @@ func (s *Server) HandleRegisterUser() func(writer http.ResponseWriter, request *
 
 		writer.Header().Set("Content-Type", "application/json")
 
-		r, err := createCreateUserRequest(*request)
+		r, err := CreateCreateUserRequest(*request)
 		if err != nil {
 			logger.ErrorLogger("Couldn't create user", err).Log()
 			http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -102,32 +102,10 @@ func (s *Server) HandleRegisterUser() func(writer http.ResponseWriter, request *
 //}
 
 func (s *Server) HandleGetAvtiveUsers() func(writer http.ResponseWriter, request *http.Request) {
-
 	return func(writer http.ResponseWriter, request *http.Request) {
-
 		writer.Header().Set("Content-Type", "application/json")
-
-		r, err := createLoginUserRequest(*request)
-		if err != nil {
-			logger.ErrorLogger("Couldn't login", err).Log()
-			http.Error(writer, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		err = validateLoginUserRequest(r)
-		if err != nil {
-			logger.ErrorLogger("Couldn't login", err).Log()
-			http.Error(writer, err.Error(), http.StatusBadRequest)
-			return
-		}
-		response := &LoginUserResponse{"https://www.google.com/"}
-		err = json.NewEncoder(writer).Encode(response)
-
-		if err != nil {
-			logger.ErrorLogger("Couldn't convert user to json", err).Log()
-			http.Error(writer, "Active user search failed", http.StatusInternalServerError)
-			return
-		}
+		au := (*s.Users).lc.Get()
+		logger.CommonLogger("Active users", au).Log()
 	}
 }
 
@@ -163,6 +141,7 @@ func (s *Server) LoginHandlerFunc(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		return
 	}
+	(*s.Users).lc.Set(user, foundUser)
 	w.Write([]byte("hello " + foundUser.UserName))
 }
 
@@ -216,7 +195,7 @@ func (s *Server) Verifi2faHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	//чтобы позднее верифицировать его одноразовые коды по этому секрету
 }
 
-func createCreateUserRequest(request http.Request) (CreateUserRequest, error) {
+func CreateCreateUserRequest(request http.Request) (CreateUserRequest, error) {
 	var r CreateUserRequest
 	err := json.NewDecoder(request.Body).Decode(&r)
 

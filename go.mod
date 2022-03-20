@@ -13,7 +13,7 @@ require (
 	golang.org/x/tour v0.1.0
 	gopkg.in/h2non/gock.v1 v1.1.2
 	gorm.io/driver/postgres v1.3.1
-	gorm.io/gorm v1.23.2
+	gorm.io/gorm v1.23.3
 )
 
 require (

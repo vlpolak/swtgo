@@ -128,6 +128,11 @@ func (s *Server) LoginHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	user := r.FormValue("user")
 	password := r.FormValue("password")
 
+	err = validateRequest(r)
+	if err != nil {
+		return
+	}
+
 	foundUser, err := (*s.Users).us.FindUser(user)
 
 	if err != nil {
@@ -143,6 +148,16 @@ func (s *Server) LoginHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	}
 	(*s.Users).lc.Set(user, foundUser)
 	w.Write([]byte("hello " + foundUser.UserName))
+}
+
+func validateRequest(r *http.Request) error {
+	if len(r.FormValue("user")) < 4 {
+		return errors.New("request was incorrect, user name should contain at least 4 characters")
+	}
+	if len(r.FormValue("password")) < 8 {
+		return errors.New("request was incorrect, user password should contain at least 8 characters")
+	}
+	return nil
 }
 
 //Отображает страницу с QR-кодом

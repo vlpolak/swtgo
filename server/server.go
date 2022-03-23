@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"github.com/vlpolak/swtgo/application"
@@ -9,12 +9,13 @@ import (
 
 type Users struct {
 	us application.UserAppInterface
-	lc cache.ActiveUsersCache
+	lc *cache.ActiveUsersCache
 }
 
-func NewUsers(us application.UserAppInterface) *Users {
+func NewUsers(us application.UserAppInterface, lc *cache.ActiveUsersCache) *Users {
 	return &Users{
 		us: us,
+		lc: lc,
 	}
 }
 
@@ -24,10 +25,11 @@ type Server struct {
 
 func CreateServer() *Server {
 	services, err := persistence.NewRepositories()
+	lc, err := cache.NewActiveUsersCache()
 	if err != nil {
 		panic(err)
 	}
-	users := NewUsers(services.User)
+	users := NewUsers(services.User, lc)
 	services.Automigrate()
 	s := &Server{
 		Users: &users,
@@ -41,5 +43,7 @@ func (s *Server) Serve() error {
 	http.HandleFunc("/2fa/", s.Setup2FAHandlerFunc)
 	http.HandleFunc("/qr.png", s.GenQRCodeHandlerFunc)
 	http.HandleFunc("/verify2fa/", s.Verifi2faHandlerFunc)
+	http.HandleFunc("/register/", s.HandleRegisterUser())
+	http.HandleFunc("/active/", s.HandleGetAvtiveUsers())
 	return http.ListenAndServe(":8080", nil)
 }

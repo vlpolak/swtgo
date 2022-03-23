@@ -13,6 +13,7 @@ type User struct {
 type UserService interface {
 	Create(user *User) (*User, error)
 	Get(user *User) (*User, error)
+	Validate(user *User) error
 }
 
 type UserRepository interface {

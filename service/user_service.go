@@ -8,21 +8,27 @@ import (
 
 var once sync.Once
 
-type userService struct {
+type Authorization interface {
+	Create(user *entity.User) (*entity.User, error)
+	Get(user *entity.User) (*entity.User, error)
+	Validate(user *entity.User) error
+}
+
+type UserService struct {
 	userRepository entity.UserRepository
 }
 
-var instance *userService
+var instance *UserService
 
 func NewUserService(r entity.UserRepository) entity.UserService {
 	once.Do(func() {
-		instance = &userService{
+		instance = &UserService{
 			userRepository: r,
 		}
 	})
 	return instance
 }
-func (*userService) Validate(user *entity.User) error {
+func (u *UserService) Validate(user *entity.User) error {
 	if user == nil {
 		err := errors.New("The user is empty")
 		return err
@@ -34,10 +40,10 @@ func (*userService) Validate(user *entity.User) error {
 	return nil
 }
 
-func (u *userService) Create(user *entity.User) (*entity.User, error) {
+func (u *UserService) Create(user *entity.User) (*entity.User, error) {
 	return u.userRepository.Save(user)
 }
 
-func (u *userService) Get(user *entity.User) (*entity.User, error) {
+func (u *UserService) Get(user *entity.User) (*entity.User, error) {
 	return u.userRepository.Find(user)
 }

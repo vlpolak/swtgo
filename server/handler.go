@@ -130,6 +130,7 @@ func (s *Server) LoginHandlerFunc(w http.ResponseWriter, r *http.Request) {
 
 	err = validateRequest(r)
 	if err != nil {
+		logger.ErrorLogger("Login request is not valid", err)
 		return
 	}
 

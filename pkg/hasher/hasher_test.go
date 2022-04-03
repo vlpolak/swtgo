@@ -1,7 +1,10 @@
 package hasher
 
 import (
+	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
+	"github.com/vlpolak/swtgo/pkg/hasher/msg"
+	"log"
 	"testing"
 )
 
@@ -38,4 +41,25 @@ func TestCheckPasswordHash(t *testing.T) {
 			assert.True(t, ch)
 		})
 	}
+
+	msg1 := &msg.Msg{
+		Key:   "122234234",
+		Value: true,
+	}
+
+	data, err := proto.Marshal(msg1)
+	if err != nil {
+		log.Fatal("marshaling error: ", err)
+		return
+	}
+
+	msg2 := new(msg.Msg)
+	err = proto.Unmarshal(data, msg2)
+	if err != nil {
+		log.Fatal("unmarshaling error: ", err)
+	}
+
+	log.Printf("msg2: %s", msg2)
+
+	log.Println("Done")
 }

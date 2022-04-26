@@ -36,12 +36,7 @@ type Client struct {
 func (c *Client) readPump() error {
 	defer func() {
 		c.chat.unregister <- c
-		err := c.conn.Close()
-		if err != nil {
-			logger.ErrorLogger("Closing connection failed", err)
-		}
 	}()
-	c.connectionConfig()
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
@@ -83,7 +78,6 @@ func (c *Client) writePump() error {
 	for {
 		select {
 		case message, ok := <-c.send:
-			c.connectionConfig()
 			if !ok {
 				errwm := c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				if errwm != nil {
@@ -142,6 +136,11 @@ func serveWs(chat *Chat, w http.ResponseWriter, r *http.Request) {
 	}
 	client := &Client{chat: chat, conn: conn, send: make(chan []byte, 256)}
 	client.chat.register <- client
+
+	connclose := make(chan string)
+
+	client.connectionConfig()
+
 	go func() {
 		err := client.writePump()
 		if err != nil {
@@ -153,5 +152,16 @@ func serveWs(chat *Chat, w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			logger.ErrorLogger("Reading socket message failed", err)
 		}
+		connclose <- "close"
 	}()
+
+	closec := <-connclose
+
+	if closec == "close" {
+		err := client.conn.Close()
+		if err != nil {
+			logger.ErrorLogger("Closing connection failed", err)
+		}
+	}
+
 }
